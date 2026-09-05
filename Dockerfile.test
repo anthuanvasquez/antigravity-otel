@@ -1,0 +1,93 @@
+FROM python:3.12-slim
+
+# Install dependencies for test assertions
+RUN apt-get update && apt-get install -y --no-install-recommends curl jq && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root test user with home directory
+RUN useradd -m -s /bin/bash testuser
+
+USER testuser
+WORKDIR /home/testuser
+
+# Set up mock existing environment (e.g. ~/.gemini/config/hooks.json with orca-status)
+RUN mkdir -p /home/testuser/.gemini/config && \
+    echo '{"orca-status": {"enabled": true, "PreInvocation": [{"type": "command", "command": "echo orca", "timeout": 10}]}}' > /home/testuser/.gemini/config/hooks.json
+
+# Copy repository files
+COPY --chown=testuser:testuser . /home/testuser/repo
+
+WORKDIR /home/testuser/repo
+
+# Run install.sh
+RUN ./install.sh
+
+# 1. Verify installation artifacts and permissions
+RUN python3 - <<'EOF'
+import json, os
+
+home = os.path.expanduser("~")
+
+# Check venv and hook.py
+assert os.path.isfile(f"{home}/.local/opt/agy-otel/hook.py"), "hook.py missing"
+assert os.access(f"{home}/.local/opt/agy-otel/hook.py", os.X_OK), "hook.py not executable"
+assert os.path.isfile(f"{home}/.local/opt/agy-otel/bin/python"), "venv python missing"
+
+# Check env file and permissions (0600)
+env_path = f"{home}/.config/agy-otel/env"
+assert os.path.isfile(env_path), "env file missing"
+mode = oct(os.stat(env_path).st_mode & 0o777)
+assert mode == "0o600", f"env permissions expected 0o600, got {mode}"
+
+# Check hooks.json merge preserved orca-status and added agy-otel
+hooks_path = f"{home}/.gemini/config/hooks.json"
+with open(hooks_path) as f:
+    data = json.load(f)
+assert "orca-status" in data, "orca-status was overwritten!"
+assert "agy-otel" in data, "agy-otel was not merged!"
+
+print("✓ [TEST PASSED] Files, virtualenv, and hook configurations are in place.")
+EOF
+
+# 2. Verify hook execution and OTel exporter
+RUN python3 - <<'EOF'
+import json, os, subprocess
+
+home = os.path.expanduser("~")
+python_bin = f"{home}/.local/opt/agy-otel/bin/python"
+hook_script = f"{home}/.local/opt/agy-otel/hook.py"
+
+# Test PostToolUse
+payload = json.dumps({
+    "conversationId": "test-conv-123",
+    "toolName": "view_file",
+    "stepIdx": 1
+})
+proc = subprocess.run([python_bin, hook_script, "PostToolUse"],
+                      input=payload, text=True, capture_output=True)
+assert proc.returncode == 0, f"PostToolUse failed: {proc.stderr}"
+assert proc.stdout.strip() == "{}", f"Unexpected stdout: {proc.stdout}"
+
+# Test PostInvocation
+payload_inv = json.dumps({
+    "conversationId": "test-conv-123",
+    "invocationNum": 1
+})
+proc = subprocess.run([python_bin, hook_script, "PostInvocation"],
+                      input=payload_inv, text=True, capture_output=True)
+assert proc.returncode == 0, f"PostInvocation failed: {proc.stderr}"
+assert proc.stdout.strip() == "{}", f"Unexpected stdout: {proc.stdout}"
+
+# Test Stop
+payload_stop = json.dumps({
+    "conversationId": "test-conv-123",
+    "terminationReason": "NO_TOOL_CALL"
+})
+proc = subprocess.run([python_bin, hook_script, "Stop"],
+                      input=payload_stop, text=True, capture_output=True)
+assert proc.returncode == 0, f"Stop failed: {proc.stderr}"
+assert proc.stdout.strip() == "{}", f"Unexpected stdout: {proc.stdout}"
+
+print("✓ [TEST PASSED] Hook script executed and responded with valid passive JSON.")
+EOF
+
+CMD ["echo", "All tests passed successfully!"]
