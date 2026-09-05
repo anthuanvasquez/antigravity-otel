@@ -1,0 +1,31 @@
+{
+  "agy-otel": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/opt/agy-otel/bin/python ~/.local/opt/agy-otel/hook.py PostToolUse",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostInvocation": [
+      {
+        "type": "command",
+        "command": "~/.local/opt/agy-otel/bin/python ~/.local/opt/agy-otel/hook.py PostInvocation",
+        "timeout": 10
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "~/.local/opt/agy-otel/bin/python ~/.local/opt/agy-otel/hook.py Stop",
+        "timeout": 10
+      }
+    ]
+  }
+}
