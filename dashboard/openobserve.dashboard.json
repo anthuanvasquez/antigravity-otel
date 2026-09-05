@@ -1,0 +1,2610 @@
+{
+  "version": 2,
+  "dashboardId": "antigravity-cli-observability",
+  "title": "Antigravity CLI Monitoring",
+  "description": "Comprehensive monitoring for Google Antigravity CLI (agy) agent sessions, tools, loop invocations, models, and weekly quotas via OpenTelemetry.",
+  "role": "",
+  "owner": "",
+  "created": "2026-09-04T22:50:00.000Z",
+  "panels": [
+    {
+      "id": "Panel_conversations",
+      "type": "metric",
+      "title": "Total Conversations",
+      "description": "Distinct interactive conversations seen in the selected window",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT count(distinct gen_ai_conversation_id) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event IS NOT NULL",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [],
+            "y": [
+              {
+                "label": "Conversations",
+                "alias": "y_axis_1",
+                "column": "y_axis_1",
+                "color": "#4e74f8",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 6,
+        "i": 1
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_tool_calls",
+      "type": "line",
+      "title": "Tool Calls Over Time",
+      "description": "Timeline of tool executions by tool name",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT histogram(_timestamp) as x_axis_1, gen_ai_tool_name as x_axis_2, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostToolUse' AND gen_ai_tool_name IS NOT NULL GROUP BY x_axis_1, x_axis_2 ORDER BY x_axis_1",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Time",
+                "alias": "x_axis_1",
+                "column": "_timestamp",
+                "color": null,
+                "aggregationFunction": "histogram",
+                "isDerived": false
+              },
+              {
+                "label": "Tool Name",
+                "alias": "x_axis_2",
+                "column": "gen_ai_tool_name",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Count",
+                "alias": "y_axis_1",
+                "column": "y_axis_1",
+                "color": "#5960b2",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 12,
+        "y": 0,
+        "w": 20,
+        "h": 6,
+        "i": 2
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_top_tools",
+      "type": "table",
+      "title": "Top Tools",
+      "description": "Most frequently executed tools ranked by number of calls",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT gen_ai_tool_name as tool_name, count(*) as calls, count(distinct gen_ai_conversation_id) as conversations FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostToolUse' AND gen_ai_tool_name IS NOT NULL GROUP BY gen_ai_tool_name ORDER BY calls DESC",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Tool Name",
+                "alias": "tool_name",
+                "column": "gen_ai_tool_name",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Calls",
+                "alias": "calls",
+                "column": "calls",
+                "color": "#5960b2",
+                "aggregationFunction": "count",
+                "isDerived": false
+              },
+              {
+                "label": "Conversations",
+                "alias": "conversations",
+                "column": "conversations",
+                "color": "#53ca53",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 32,
+        "y": 0,
+        "w": 16,
+        "h": 6,
+        "i": 3
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_loop_invocations",
+      "type": "line",
+      "title": "Agent Loop Invocations",
+      "description": "Frequency of passes through the agent loop over time",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT histogram(_timestamp) as x_axis_1, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostInvocation' GROUP BY x_axis_1 ORDER BY x_axis_1",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Time",
+                "alias": "x_axis_1",
+                "column": "_timestamp",
+                "color": null,
+                "aggregationFunction": "histogram",
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Invocations",
+                "alias": "y_axis_1",
+                "column": "y_axis_1",
+                "color": "#f88e4e",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "w": 16,
+        "h": 7,
+        "i": 4
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_requests_by_model",
+      "type": "pie",
+      "title": "Requests by Model",
+      "description": "Distribution of LLM models serving Antigravity requests",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT gen_ai_request_model as x_axis_1, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostInvocation' AND gen_ai_request_model IS NOT NULL GROUP BY x_axis_1 ORDER BY y_axis_1 DESC",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Model",
+                "alias": "x_axis_1",
+                "column": "gen_ai_request_model",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Requests",
+                "alias": "y_axis_1",
+                "column": "y_axis_1",
+                "color": "#5960b2",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 16,
+        "y": 6,
+        "w": 16,
+        "h": 7,
+        "i": 5
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_termination_reasons",
+      "type": "pie",
+      "title": "Why Turns Ended",
+      "description": "Agent turn completion reasons (NO_TOOL_CALL, ERROR, USER_CANCELED, etc.)",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT agy_termination_reason as x_axis_1, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'Stop' AND agy_termination_reason IS NOT NULL GROUP BY x_axis_1 ORDER BY y_axis_1 DESC",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Reason",
+                "alias": "x_axis_1",
+                "column": "agy_termination_reason",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Turns",
+                "alias": "y_axis_1",
+                "column": "y_axis_1",
+                "color": "#53ca53",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 32,
+        "y": 6,
+        "w": 16,
+        "h": 7,
+        "i": 6
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_turns_over_time",
+      "type": "line",
+      "title": "Turns Completed Over Time",
+      "description": "Volume of finished agent turns grouped by model",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT histogram(_timestamp) as x_axis_1, gen_ai_request_model as x_axis_2, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'Stop' GROUP BY x_axis_1, x_axis_2 ORDER BY x_axis_1",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Time",
+                "alias": "x_axis_1",
+                "column": "_timestamp",
+                "color": null,
+                "aggregationFunction": "histogram",
+                "isDerived": false
+              },
+              {
+                "label": "Model",
+                "alias": "x_axis_2",
+                "column": "gen_ai_request_model",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Completed Turns",
+                "alias": "y_axis_1",
+                "column": "y_axis_1",
+                "color": "#5960b2",
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 0,
+        "y": 13,
+        "w": 24,
+        "h": 7,
+        "i": 7
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_recent_turns",
+      "type": "table",
+      "title": "Recent Turns Log",
+      "description": "Latest completed agent turns with status and conversation IDs",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "numbers",
+        "decimals": 0,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT _timestamp, agy_termination_reason, gen_ai_request_model, gen_ai_conversation_id, agy_execution_num, agy_fully_idle FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'Stop' ORDER BY _timestamp DESC LIMIT 25",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "default",
+            "stream_type": "traces",
+            "x": [
+              {
+                "label": "Time",
+                "alias": "_timestamp",
+                "column": "_timestamp",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Termination Reason",
+                "alias": "agy_termination_reason",
+                "column": "agy_termination_reason",
+                "color": null,
+                "aggregationFunction": "count",
+                "isDerived": false
+              },
+              {
+                "label": "Model",
+                "alias": "gen_ai_request_model",
+                "column": "gen_ai_request_model",
+                "color": null,
+                "aggregationFunction": "count",
+                "isDerived": false
+              },
+              {
+                "label": "Conversation ID",
+                "alias": "gen_ai_conversation_id",
+                "column": "gen_ai_conversation_id",
+                "color": null,
+                "aggregationFunction": "count",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 24,
+        "y": 13,
+        "w": 24,
+        "h": 7,
+        "i": 8
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_quota_burn",
+      "type": "line",
+      "title": "Gemini Quota Remaining (%)",
+      "description": "Weekly Gemini quota burn rate over time expressed as percentage (0% to 100%)",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "percent",
+        "decimals": 1,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT histogram(_timestamp) as x_axis_1, round(max(value) * 100, 1) as y_axis_1 FROM \"agy_quota_remaining_fraction\" WHERE agy_quota_bucket = 'gemini-weekly' GROUP BY x_axis_1 ORDER BY x_axis_1",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "agy_quota_remaining_fraction",
+            "stream_type": "metrics",
+            "x": [
+              {
+                "label": "Time",
+                "alias": "x_axis_1",
+                "column": "_timestamp",
+                "color": null,
+                "aggregationFunction": "histogram",
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Remaining Quota (%)",
+                "alias": "y_axis_1",
+                "column": "value",
+                "color": "#53ca53",
+                "aggregationFunction": "max",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 0,
+        "y": 20,
+        "w": 24,
+        "h": 7,
+        "i": 9
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_quota_current",
+      "type": "table",
+      "title": "Current Quota Status (%)",
+      "description": "Current remaining quota percentage by bucket and group (0% to 100%)",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "percent",
+        "decimals": 1,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT agy_quota_bucket as bucket, agy_quota_group as group_name, round(max(value) * 100, 1) as remaining_quota_pct FROM \"agy_quota_remaining_fraction\" GROUP BY bucket, group_name",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "agy_quota_remaining_fraction",
+            "stream_type": "metrics",
+            "x": [
+              {
+                "label": "Bucket",
+                "alias": "bucket",
+                "column": "agy_quota_bucket",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Group",
+                "alias": "group_name",
+                "column": "group_name",
+                "color": null,
+                "aggregationFunction": "max",
+                "isDerived": false
+              },
+              {
+                "label": "Remaining Quota (%)",
+                "alias": "remaining_quota_pct",
+                "column": "remaining_quota_pct",
+                "color": "#53ca53",
+                "aggregationFunction": "max",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 24,
+        "y": 20,
+        "w": 12,
+        "h": 7,
+        "i": 10
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    },
+    {
+      "id": "Panel_quota_reset",
+      "type": "table",
+      "title": "Days Until Quota Reset",
+      "description": "Days remaining until quota window fully resets (converted from seconds)",
+      "config": {
+        "show_legends": true,
+        "legends_position": null,
+        "unit": "custom",
+        "decimals": 1,
+        "line_thickness": 1.5,
+        "top_results_others": false,
+        "axis_border_show": false,
+        "label_option": {
+          "rotate": 0
+        },
+        "show_symbol": false,
+        "line_interpolation": "smooth",
+        "legend_width": {
+          "unit": "px"
+        },
+        "base_map": {
+          "type": "osm"
+        },
+        "map_type": {
+          "type": "world"
+        },
+        "map_view": {
+          "zoom": 1,
+          "lat": 0,
+          "lng": 0
+        },
+        "map_symbol_style": {
+          "size": "by Value",
+          "size_by_value": {
+            "min": 1,
+            "max": 100
+          },
+          "size_fixed": 2
+        },
+        "drilldown": [],
+        "mark_line": [],
+        "override_config": [],
+        "connect_nulls": false,
+        "no_value_replacement": "",
+        "wrap_table_cells": false,
+        "table_transpose": false,
+        "table_dynamic_columns": false,
+        "color": {
+          "mode": "palette-classic-by-series",
+          "fixedColor": [
+            "#53ca53"
+          ],
+          "seriesBy": "last"
+        }
+      },
+      "queryType": "sql",
+      "queries": [
+        {
+          "query": "SELECT agy_quota_bucket as bucket, round(max(value) / 86400.0, 1) as days_to_reset FROM \"agy_quota_seconds_to_reset\" GROUP BY bucket",
+          "vrlFunctionQuery": "",
+          "customQuery": true,
+          "fields": {
+            "stream": "agy_quota_seconds_to_reset",
+            "stream_type": "metrics",
+            "x": [
+              {
+                "label": "Bucket",
+                "alias": "bucket",
+                "column": "agy_quota_bucket",
+                "color": null,
+                "isDerived": false
+              }
+            ],
+            "y": [
+              {
+                "label": "Days Until Reset",
+                "alias": "days_to_reset",
+                "column": "days_to_reset",
+                "color": "#5960b2",
+                "aggregationFunction": "max",
+                "isDerived": false
+              }
+            ],
+            "z": [],
+            "breakdown": [],
+            "filter": {
+              "filterType": "group",
+              "logicalOperator": "AND",
+              "conditions": []
+            }
+          },
+          "config": {
+            "promql_legend": "",
+            "layer_type": "scatter",
+            "weight_fixed": 1,
+            "limit": 0,
+            "min": 0,
+            "max": 100,
+            "time_shift": []
+          }
+        }
+      ],
+      "layout": {
+        "x": 36,
+        "y": 20,
+        "w": 12,
+        "h": 7,
+        "i": 11
+      },
+      "htmlContent": "",
+      "markdownContent": ""
+    }
+  ],
+  "tabs": [
+    {
+      "name": "Overview & Activity",
+      "panels": [
+        {
+          "id": "Panel_conversations",
+          "type": "metric",
+          "title": "Total Conversations",
+          "description": "Distinct interactive conversations seen in the selected window",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT count(distinct gen_ai_conversation_id) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event IS NOT NULL",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [],
+                "y": [
+                  {
+                    "label": "Conversations",
+                    "alias": "y_axis_1",
+                    "column": "y_axis_1",
+                    "color": "#4e74f8",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 6,
+            "i": 1
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_tool_calls",
+          "type": "line",
+          "title": "Tool Calls Over Time",
+          "description": "Timeline of tool executions by tool name",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT histogram(_timestamp) as x_axis_1, gen_ai_tool_name as x_axis_2, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostToolUse' AND gen_ai_tool_name IS NOT NULL GROUP BY x_axis_1, x_axis_2 ORDER BY x_axis_1",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Time",
+                    "alias": "x_axis_1",
+                    "column": "_timestamp",
+                    "color": null,
+                    "aggregationFunction": "histogram",
+                    "isDerived": false
+                  },
+                  {
+                    "label": "Tool Name",
+                    "alias": "x_axis_2",
+                    "column": "gen_ai_tool_name",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Count",
+                    "alias": "y_axis_1",
+                    "column": "y_axis_1",
+                    "color": "#5960b2",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 12,
+            "y": 0,
+            "w": 20,
+            "h": 6,
+            "i": 2
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_top_tools",
+          "type": "table",
+          "title": "Top Tools",
+          "description": "Most frequently executed tools ranked by number of calls",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT gen_ai_tool_name as tool_name, count(*) as calls, count(distinct gen_ai_conversation_id) as conversations FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostToolUse' AND gen_ai_tool_name IS NOT NULL GROUP BY gen_ai_tool_name ORDER BY calls DESC",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Tool Name",
+                    "alias": "tool_name",
+                    "column": "gen_ai_tool_name",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Calls",
+                    "alias": "calls",
+                    "column": "calls",
+                    "color": "#5960b2",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  },
+                  {
+                    "label": "Conversations",
+                    "alias": "conversations",
+                    "column": "conversations",
+                    "color": "#53ca53",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 32,
+            "y": 0,
+            "w": 16,
+            "h": 6,
+            "i": 3
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_loop_invocations",
+          "type": "line",
+          "title": "Agent Loop Invocations",
+          "description": "Frequency of passes through the agent loop over time",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT histogram(_timestamp) as x_axis_1, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostInvocation' GROUP BY x_axis_1 ORDER BY x_axis_1",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Time",
+                    "alias": "x_axis_1",
+                    "column": "_timestamp",
+                    "color": null,
+                    "aggregationFunction": "histogram",
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Invocations",
+                    "alias": "y_axis_1",
+                    "column": "y_axis_1",
+                    "color": "#f88e4e",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 6,
+            "w": 16,
+            "h": 7,
+            "i": 4
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_requests_by_model",
+          "type": "pie",
+          "title": "Requests by Model",
+          "description": "Distribution of LLM models serving Antigravity requests",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT gen_ai_request_model as x_axis_1, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'PostInvocation' AND gen_ai_request_model IS NOT NULL GROUP BY x_axis_1 ORDER BY y_axis_1 DESC",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Model",
+                    "alias": "x_axis_1",
+                    "column": "gen_ai_request_model",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Requests",
+                    "alias": "y_axis_1",
+                    "column": "y_axis_1",
+                    "color": "#5960b2",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 16,
+            "y": 6,
+            "w": 16,
+            "h": 7,
+            "i": 5
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_termination_reasons",
+          "type": "pie",
+          "title": "Why Turns Ended",
+          "description": "Agent turn completion reasons (NO_TOOL_CALL, ERROR, USER_CANCELED, etc.)",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT agy_termination_reason as x_axis_1, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'Stop' AND agy_termination_reason IS NOT NULL GROUP BY x_axis_1 ORDER BY y_axis_1 DESC",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Reason",
+                    "alias": "x_axis_1",
+                    "column": "agy_termination_reason",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Turns",
+                    "alias": "y_axis_1",
+                    "column": "y_axis_1",
+                    "color": "#53ca53",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 32,
+            "y": 6,
+            "w": 16,
+            "h": 7,
+            "i": 6
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_turns_over_time",
+          "type": "line",
+          "title": "Turns Completed Over Time",
+          "description": "Volume of finished agent turns grouped by model",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT histogram(_timestamp) as x_axis_1, gen_ai_request_model as x_axis_2, count(*) as y_axis_1 FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'Stop' GROUP BY x_axis_1, x_axis_2 ORDER BY x_axis_1",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Time",
+                    "alias": "x_axis_1",
+                    "column": "_timestamp",
+                    "color": null,
+                    "aggregationFunction": "histogram",
+                    "isDerived": false
+                  },
+                  {
+                    "label": "Model",
+                    "alias": "x_axis_2",
+                    "column": "gen_ai_request_model",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Completed Turns",
+                    "alias": "y_axis_1",
+                    "column": "y_axis_1",
+                    "color": "#5960b2",
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 13,
+            "w": 24,
+            "h": 7,
+            "i": 7
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_recent_turns",
+          "type": "table",
+          "title": "Recent Turns Log",
+          "description": "Latest completed agent turns with status and conversation IDs",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT _timestamp, agy_termination_reason, gen_ai_request_model, gen_ai_conversation_id, agy_execution_num, agy_fully_idle FROM \"default\" WHERE service_name = 'antigravity-cli' AND agy_hook_event = 'Stop' ORDER BY _timestamp DESC LIMIT 25",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "default",
+                "stream_type": "traces",
+                "x": [
+                  {
+                    "label": "Time",
+                    "alias": "_timestamp",
+                    "column": "_timestamp",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Termination Reason",
+                    "alias": "agy_termination_reason",
+                    "column": "agy_termination_reason",
+                    "color": null,
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  },
+                  {
+                    "label": "Model",
+                    "alias": "gen_ai_request_model",
+                    "column": "gen_ai_request_model",
+                    "color": null,
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  },
+                  {
+                    "label": "Conversation ID",
+                    "alias": "gen_ai_conversation_id",
+                    "column": "gen_ai_conversation_id",
+                    "color": null,
+                    "aggregationFunction": "count",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 13,
+            "w": 24,
+            "h": 7,
+            "i": 8
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        }
+      ]
+    },
+    {
+      "name": "Quota & Spend",
+      "panels": [
+        {
+          "id": "Panel_quota_burn",
+          "type": "line",
+          "title": "Gemini Quota Remaining (%)",
+          "description": "Weekly Gemini quota burn rate over time expressed as percentage (0% to 100%)",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "percent",
+            "decimals": 1,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT histogram(_timestamp) as x_axis_1, round(max(value) * 100, 1) as y_axis_1 FROM \"agy_quota_remaining_fraction\" WHERE agy_quota_bucket = 'gemini-weekly' GROUP BY x_axis_1 ORDER BY x_axis_1",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "agy_quota_remaining_fraction",
+                "stream_type": "metrics",
+                "x": [
+                  {
+                    "label": "Time",
+                    "alias": "x_axis_1",
+                    "column": "_timestamp",
+                    "color": null,
+                    "aggregationFunction": "histogram",
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Remaining Quota (%)",
+                    "alias": "y_axis_1",
+                    "column": "value",
+                    "color": "#53ca53",
+                    "aggregationFunction": "max",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 20,
+            "w": 24,
+            "h": 7,
+            "i": 9
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_quota_current",
+          "type": "table",
+          "title": "Current Quota Status (%)",
+          "description": "Current remaining quota percentage by bucket and group (0% to 100%)",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "percent",
+            "decimals": 1,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT agy_quota_bucket as bucket, agy_quota_group as group_name, round(max(value) * 100, 1) as remaining_quota_pct FROM \"agy_quota_remaining_fraction\" GROUP BY bucket, group_name",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "agy_quota_remaining_fraction",
+                "stream_type": "metrics",
+                "x": [
+                  {
+                    "label": "Bucket",
+                    "alias": "bucket",
+                    "column": "agy_quota_bucket",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Group",
+                    "alias": "group_name",
+                    "column": "group_name",
+                    "color": null,
+                    "aggregationFunction": "max",
+                    "isDerived": false
+                  },
+                  {
+                    "label": "Remaining Quota (%)",
+                    "alias": "remaining_quota_pct",
+                    "column": "remaining_quota_pct",
+                    "color": "#53ca53",
+                    "aggregationFunction": "max",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 20,
+            "w": 12,
+            "h": 7,
+            "i": 10
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        },
+        {
+          "id": "Panel_quota_reset",
+          "type": "table",
+          "title": "Days Until Quota Reset",
+          "description": "Days remaining until quota window fully resets (converted from seconds)",
+          "config": {
+            "show_legends": true,
+            "legends_position": null,
+            "unit": "custom",
+            "decimals": 1,
+            "line_thickness": 1.5,
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "base_map": {
+              "type": "osm"
+            },
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": {
+              "zoom": 1,
+              "lat": 0,
+              "lng": 0
+            },
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "override_config": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [
+                "#53ca53"
+              ],
+              "seriesBy": "last"
+            }
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT agy_quota_bucket as bucket, round(max(value) / 86400.0, 1) as days_to_reset FROM \"agy_quota_seconds_to_reset\" GROUP BY bucket",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "agy_quota_seconds_to_reset",
+                "stream_type": "metrics",
+                "x": [
+                  {
+                    "label": "Bucket",
+                    "alias": "bucket",
+                    "column": "agy_quota_bucket",
+                    "color": null,
+                    "isDerived": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "Days Until Reset",
+                    "alias": "days_to_reset",
+                    "column": "days_to_reset",
+                    "color": "#5960b2",
+                    "aggregationFunction": "max",
+                    "isDerived": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 36,
+            "y": 20,
+            "w": 12,
+            "h": 7,
+            "i": 11
+          },
+          "htmlContent": "",
+          "markdownContent": ""
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "list": [
+      {
+        "type": "query_values",
+        "name": "service",
+        "label": "Service",
+        "query_data": {
+          "stream_type": "traces",
+          "stream": "default",
+          "field": "service_name",
+          "max_record_size": null
+        },
+        "value": "antigravity-cli",
+        "options": []
+      }
+    ]
+  }
+}
