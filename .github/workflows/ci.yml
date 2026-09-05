@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  syntax:
+    name: Syntax & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Syntax check
+        run: |
+          bash -n install.sh
+          python3 -m py_compile .local/opt/agy-otel/hook.py
+
+  test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    needs: syntax
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run test suite via Docker
+        run: docker build -f Dockerfile.test .
